@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  h1, h2, h3, h4, h5 {
+    @apply font-bold tracking-tightest;
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+}
+
+@layer components {
+  .label {
+    @apply text-xs font-semibold uppercase tracking-wider text-foreground/50;
+  }
+  .skeleton {
+    @apply relative overflow-hidden bg-muted;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    @apply animate-shimmer;
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .glass-nav {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+  }
+}
+
+/* Google Maps autocomplete dropdown fix */
+.pac-container {
+  z-index: 9999 !important;
+  border-radius: 12px !important;
+  border: 1px solid #EBEBEB !important;
+  box-shadow: 0 6px 20px rgba(17,17,17,0.08) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+.pac-item {
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  color: #111111 !important;
+}
+.pac-item:hover, .pac-item-selected {
+  background: #FFF0E8 !important;
+}
+.pac-icon { display: none !important; }
