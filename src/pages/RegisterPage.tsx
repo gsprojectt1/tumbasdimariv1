@@ -80,6 +80,21 @@ export function RegisterPage() {
     }
   };
 
+  const onStep1Submit = async (data: z.infer<typeof schema>) => {
+    setLoading(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        await signUp(data.email, data.password, data.name, role);
+      }
+      setStep(2);
+    } catch (e: any) {
+      toast(e.message || 'Gagal daftar', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSubmit = async (data: z.infer<typeof schema>) => {
     if (!location) {
       toast('Pilih lokasi dulu', 'error');
@@ -91,7 +106,6 @@ export function RegisterPage() {
     }
     setLoading(true);
     try {
-      await signUp(data.email, data.password, data.name, role);
       const { data: session } = await supabase.auth.getSession();
       if (session.session?.user) {
         await supabase.from('profiles').update({
@@ -125,7 +139,6 @@ export function RegisterPage() {
   };
 
   const goToStep1 = () => setStep(1);
-  const goToStep2 = () => setStep(2);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -184,7 +197,7 @@ export function RegisterPage() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
-              onSubmit={handleSubmit(goToStep2)}
+              onSubmit={handleSubmit(onStep1Submit)}
             >
               <div>
                 <h1 className="text-2xl font-bold tracking-tight mb-1">Data diri</h1>
@@ -196,7 +209,7 @@ export function RegisterPage() {
               <Input label="Nomor telepon" placeholder="08xxxxxxxxxx" icon={<Phone size={16} />} error={errors.phone?.message} {...register('phone')} />
               <div className="flex gap-2">
                 <Button type="button" variant="outline" onClick={() => setStep(0)}><ArrowLeft size={16} /></Button>
-                <Button type="submit" fullWidth size="lg">Lanjut <ArrowRight size={16} /></Button>
+                <Button type="submit" fullWidth size="lg" loading={loading}>Lanjut <ArrowRight size={16} /></Button>
               </div>
             </motion.form>
           )}
