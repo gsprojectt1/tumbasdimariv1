@@ -122,17 +122,20 @@ export function ChatConversationPage() {
 
   useEffect(() => {
     if (!id || !user) return;
+    let cancelled = false;
     let channel: any;
     let presenceChannel: any;
 
     (async () => {
-      const timeout = setTimeout(() => { setLoadError(true); }, 10000);
+      const timeout = setTimeout(() => { if (!cancelled) setLoadError(true); }, 10000);
       try {
         const { data: c, error: cErr } = await supabase.from('conversations').select('*, store:stores(*), buyer:profiles!conversations_buyer_id_fkey(*)').eq('id', id).maybeSingle();
         if (cErr) throw cErr;
+        if (cancelled) return;
         setConv(c as Conversation | null);
         const { data: msgs, error: mErr } = await supabase.from('messages').select('*').eq('conversation_id', id).order('created_at', { ascending: true });
         if (mErr) throw mErr;
+        if (cancelled) return;
         setMessages((msgs || []) as Message[]);
       // mark read
       if (profile?.role === 'seller') {
@@ -140,6 +143,8 @@ export function ChatConversationPage() {
       } else {
         await supabase.from('conversations').update({ buyer_unread: 0 }).eq('id', id);
       }
+
+      if (cancelled) return;
 
       // Realtime channel for new messages
       channel = supabase.channel(`chat-${id}`)
@@ -166,6 +171,8 @@ export function ChatConversationPage() {
         })
         .subscribe();
 
+      if (cancelled) return;
+
       // Presence channel for online status + typing
       presenceChannel = supabase.channel(`presence-${id}`, {
         config: { presence: { key: user.id } },
@@ -191,13 +198,14 @@ export function ChatConversationPage() {
           }
         });
       } catch (e) {
-        setLoadError(true);
+        if (!cancelled) setLoadError(true);
       } finally {
         clearTimeout(timeout);
       }
     })();
 
     return () => {
+      cancelled = true;
       if (channel) supabase.removeChannel(channel);
       if (presenceChannel) supabase.removeChannel(presenceChannel);
     };
