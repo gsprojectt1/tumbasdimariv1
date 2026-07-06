@@ -131,7 +131,7 @@ export function useConversations() {
     queryKey: ['conversations', user?.id, profile?.role],
     enabled: !!user,
     queryFn: async () => {
-      let q = supabase.from('conversations').select('*, store:stores(*), buyer:profiles(*), product:products(*)');
+      let q = supabase.from('conversations').select('*, store:stores(*), buyer:profiles!conversations_buyer_id_fkey(*), product:products(*)');
       if (profile?.role === 'seller') {
         const { data: store } = await supabase.from('stores').select('id').eq('seller_id', user!.id).maybeSingle();
         if (store) q = q.eq('store_id', store.id);
@@ -250,7 +250,7 @@ export function useActiveDelivery() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('deliveries')
-        .select('*, order:orders(*, store:stores(*), buyer:profiles(*), items:order_items(*))')
+        .select('*, order:orders(*, store:stores(*), buyer:profiles!orders_buyer_id_fkey(*), items:order_items(*))')
         .eq('courier_id', user!.id)
         .neq('status', 'completed')
         .order('created_at', { ascending: false })

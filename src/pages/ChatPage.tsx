@@ -23,7 +23,7 @@ export function ChatListPage() {
     setLoading(true);
     const timeout = setTimeout(() => { setError(true); setLoading(false); }, 10000);
     try {
-      let q = supabase.from('conversations').select('*, store:stores(*), buyer:profiles(*), product:products(*)');
+      let q = supabase.from('conversations').select('*, store:stores(*), buyer:profiles!conversations_buyer_id_fkey(*), product:products(*)');
       if (profile?.role === 'seller') {
         const { data: store } = await supabase.from('stores').select('id').eq('seller_id', user.id).maybeSingle();
         if (store) q = q.eq('store_id', store.id);
@@ -128,7 +128,7 @@ export function ChatConversationPage() {
     (async () => {
       const timeout = setTimeout(() => { setLoadError(true); }, 10000);
       try {
-        const { data: c, error: cErr } = await supabase.from('conversations').select('*, store:stores(*), buyer:profiles(*)').eq('id', id).maybeSingle();
+        const { data: c, error: cErr } = await supabase.from('conversations').select('*, store:stores(*), buyer:profiles!conversations_buyer_id_fkey(*)').eq('id', id).maybeSingle();
         if (cErr) throw cErr;
         setConv(c as Conversation | null);
         const { data: msgs, error: mErr } = await supabase.from('messages').select('*').eq('conversation_id', id).order('created_at', { ascending: true });
