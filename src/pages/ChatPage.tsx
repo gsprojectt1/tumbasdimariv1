@@ -59,7 +59,7 @@ export function ChatListPage() {
 
     return () => { supabase.removeChannel(channel); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, profile]);
+  }, [user?.id, profile]);
 
   if (!user) {
     return <div className="max-w-3xl mx-auto px-4 py-8"><EmptyState icon={<MessageCircle size={24} />} title="Masuk dulu" action={<Button onClick={() => navigate('/login')}>Masuk</Button>} /></div>;
@@ -202,7 +202,7 @@ export function ChatConversationPage() {
       if (presenceChannel) supabase.removeChannel(presenceChannel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, user]);
+  }, [id, user?.id]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });

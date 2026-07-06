@@ -32,7 +32,8 @@ export function NotificationsPage() {
         () => refetch())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, refetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, refetch]);
 
   useEffect(() => {
     if (user && notifs && notifs.some((n) => !n.is_read)) {
@@ -41,7 +42,8 @@ export function NotificationsPage() {
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [user, notifs, refetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, notifs, refetch]);
 
   if (!user) {
     return <div className="max-w-3xl mx-auto px-4 py-8"><EmptyState icon={<Bell size={24} />} title="Masuk dulu" action={<Button onClick={() => navigate('/login')}>Masuk</Button>} /></div>;

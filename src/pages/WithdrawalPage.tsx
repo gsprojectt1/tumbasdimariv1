@@ -54,7 +54,7 @@ export function WithdrawalPage({ role }: { role: 'seller' | 'courier' }) {
     setLoading(false);
   };
 
-  useEffect(() => { if (user) load(); }, [user]);
+  useEffect(() => { if (user) load(); }, [user?.id]);
 
   if (profile?.role !== role) return null;
 

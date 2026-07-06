@@ -35,7 +35,8 @@ export function OrdersPage() {
         () => refetch())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, refetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, refetch]);
 
   if (!user) {
     return <div className="max-w-3xl mx-auto px-4 py-8"><EmptyState icon={<Package size={24} />} title="Masuk dulu" action={<Button onClick={() => navigate('/login')}>Masuk</Button>} /></div>;

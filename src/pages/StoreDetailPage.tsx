@@ -72,7 +72,7 @@ export function StoreDetailPage() {
 
       setLoading(false);
     })();
-  }, [storeId, user]);
+  }, [storeId, user?.id]);
 
   const toggleFollow = async () => {
     if (!user) { navigate('/login'); return; }

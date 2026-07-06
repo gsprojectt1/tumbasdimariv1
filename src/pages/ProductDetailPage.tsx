@@ -73,7 +73,7 @@ export function ProductDetailPage() {
       supabase.from('wishlist').select('id').eq('user_id', user.id).eq('product_id', product.id).maybeSingle()
         .then(({ data }) => setWished(!!data));
     }
-  }, [user, product]);
+  }, [user?.id, product]);
 
   if (isLoading) return <Spinner className="py-20" />;
   if (!product) return <div className="py-20 text-center text-foreground/50">Produk tidak ditemukan</div>;

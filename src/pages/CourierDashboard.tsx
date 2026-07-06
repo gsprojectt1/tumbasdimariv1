@@ -50,7 +50,7 @@ export function CourierDashboard() {
         .limit(20);
       setHistory((data || []) as Delivery[]);
     })();
-  }, [courier, user]);
+  }, [courier, user?.id]);
 
   if (profile?.role !== 'courier') return null;
 
