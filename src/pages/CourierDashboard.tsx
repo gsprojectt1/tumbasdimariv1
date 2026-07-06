@@ -472,7 +472,7 @@ function ActiveDelivery({ delivery, courierId }: { delivery: Delivery; courierId
     }, 15000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, sellerLoc, buyerLoc]);
+  }, [phase, storeLoc, buyerLoc]);
 
   const advancePhase = async () => {
     if (phase === 'at_seller') {
